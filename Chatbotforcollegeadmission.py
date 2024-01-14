@@ -1,23 +1,19 @@
 import nltk
 import random
 import string
+import warnings
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 nltk.download('punkt')
 nltk.download('wordnet')
 
+warnings.filterwarnings('ignore')
+
 f = open('admission_prospectus_2022.txt', 'r', errors='ignore')
 raw = f.read()
 raw = raw.lower()
 
-
-tokens = nltk.sent_tokenize(raw) #converts to list of scentences
-word_tokens = nltk.word_tokenize(raw) #converts to list of words
-
-# sentToken = sent_tokens[:4]
-#print(sentToken)
-wordToken = word_tokens[:4]
-#print(wordToken)
+tokens = nltk.sent_tokenize(raw)
 
 #preprocessing 
 lemmer = nltk.stem.WordNetLemmatizer()
@@ -41,11 +37,13 @@ def response(response):
     flat.sort()
     req_tfidf = flat[-2]
     if(req_tfidf == 0):
+        # response to errors in bot
         chatbot_response = chatbot_response + "I am sorry! I don't understand you"
     else:
         chatbot_response=chatbot_response+tokens[idx]
 
     tokens.pop()
+    # remeber the old chats with users
     tokens.append("What did I asked = "+response+" What you replied = "+chatbot_response)
     return chatbot_response
     
